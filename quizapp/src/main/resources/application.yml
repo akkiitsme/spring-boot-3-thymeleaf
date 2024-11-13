@@ -1,0 +1,51 @@
+#server configuration
+server:
+  port: 8083
+  error:
+    whitelabel:
+      enabled: false
+    include-stacktrace: never
+    include-exception: false
+    include-message: always
+
+spring:
+  application:
+    name: QUIZ-APP
+
+# database Configuration
+  datasource:
+    url: jdbc:mysql://localhost:3306/quiz_portal?useSSL=false&serverTimezone=UTC
+    username: root
+    password: 123456
+    # driver-class-name: com.mysql.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+#Spring-Actuator configuration
+management:
+  endpoints:
+    web:
+      base-path: /quiz-actuator
+      exposure:
+        include:
+          - health
+          - info
+  endpoint:
+    info:
+      enabled: true
+    health:
+      show-details: always
+  info:
+    env:
+      enabled: true
+info:
+  app:
+    name: QUIZ-APP APPLICATION
+    description: This is an Quiz Application to manage Student/Admin
+    version: 3.3.5
+  author: 'ADMIN - KC'

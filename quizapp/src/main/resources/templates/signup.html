@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Sign Up | QuizApp</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <style>
+        .gradient-custom {
+        /* fallback for old browsers */
+            background: #f093fb;
+
+            /* Chrome 10-25, Safari 5.1-6 */
+            background: -webkit-linear-gradient(to bottom right, rgba(240, 147, 251, 1), rgba(245, 87, 108, 1));
+
+            /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+            background: linear-gradient(to bottom right, rgba(240, 147, 251, 1), rgba(245, 87, 108, 1))
+        }
+
+        .card-registration .select-input.form-control[readonly]:not([disabled]) {
+            font-size: 1rem;
+            line-height: 2.15;
+            padding-left: .75em;
+            padding-right: .75em;
+        }
+        .card-registration .select-arrow {
+            top: 13px;
+        }
+    </style>
+</head>
+<body>
+<section class="gradient-custom">
+    <div class="container py-5 h-100">
+        <div class="row justify-content-center align-items-center h-100">
+            <div class="col-12 col-lg-9 col-xl-7">
+                <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+                    <div class="card-body p-4 p-md-5">
+                        <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Registration Form</h3>
+                        <input type="hidden" id="phoneNumValid" value="0">
+                        <div class="alert alert-danger mt-3 w-100 invalidPhone" style = "display:none">Please enter a 10-digit phone number</div>
+                        <div class="alert alert-info mt-3 w-100 invalidName" style = "display:none">Please enter valid name</div>
+                        <div class="alert alert-dark mt-3 w-100 invalidMail" style = "display:none">Please Enter valid Email</div>
+                        <div class="alert alert-danger mt-3 w-100 invalidNameAlphabetic" style = "display:none">Please Enter Alphabetic name</div>
+                        <div class="alert alert-secondary mt-3 w-100 invalidPass" style = "display:none">Password must be at least 8 characters long</div>
+                        <div class="alert alert-danger mt-3 w-100 invalidNum" style = "display:none">Please enter valid phone number</div>
+                        <div class="alert alert-danger mt-3 w-100 alreadyExistPhone" style = "display:none">This Mobile No is already Exist</div>
+                        <div class="alert alert-warning alert-dismissible fade show mt-3 w-100 alreadyExist" role="alert" style = "display:none">User is Already Exist</div>
+
+                        <form th:action="@{/signup}" id="signup" method="post">
+
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+
+                                    <div class="form-outline">
+                                        <label class="form-label" for="firstName">First Name</label>
+                                        <input type="text" id="firstName" name="firstName" class="form-control form-control-lg" placeholder="Enter your firstname" required="required" />
+                                    </div>
+
+                                </div>
+                                <div class="col-md-6 mb-4">
+
+                                    <div class="form-outline">
+                                        <label class="form-label" for="lastName">Last Name</label>
+                                        <input type="text" id="lastName" name="lastName" class="form-control form-control-lg" placeholder="Enter your lastname" required="required" />
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-4 d-flex align-items-center">
+
+                                    <div class="form-outline w-100">
+                                        <label for="dob" class="form-label">Birthday</label>
+                                        <input type="date" class="form-control form-control-lg" id="dob" name="dob" required="required" />
+                                    </div>
+
+                                </div>
+                                <div class="col-md-6 mb-4">
+
+                                    <h6 class="mb-2 pb-1">Gender: </h6>
+
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="gender" id="femaleGender"
+                                               value="Female" checked />
+                                        <label class="form-check-label" for="femaleGender">Female</label>
+                                    </div>
+
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="gender" id="maleGender"
+                                               value="Male" />
+                                        <label class="form-check-label" for="maleGender">Male</label>
+                                    </div>
+
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="gender" id="otherGender"
+                                               value="Other" />
+                                        <label class="form-check-label" for="otherGender">Other</label>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-4 pb-2">
+
+                                    <div class="form-outline">
+                                        <label class="form-label" for="email">Email</label>
+                                        <input type="email" id="email" name="email" class="form-control form-control-lg" placeholder="Enter your email" required="required"/>
+
+                                    </div>
+
+                                </div>
+                                <div class="col-md-6 mb-4 pb-2">
+
+                                    <div class="form-outline">
+                                        <label class="form-label" for="password">Password</label>
+                                        <input class="form-control form-control-lg" type="password" name="password" id="password" placeholder="Enter your password" required="required"/>
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-outline col-md-6 mb-4 pb-2">
+                                    <label class="form-label" for="phoneNo">Phone Number</label>
+                                    <input type="number" id="phoneNo" name="phoneNo" class="form-control form-control-lg" placeholder="Enter your mobile No" required="required" />
+                                </div>
+                                <div class="col-md-6 d-flex justify-content-center">
+                                    <div class="mt-4 pt-2 ">
+                                        <input class="btn btn-primary btn-lg" type="submit" value="Submit" />
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $(document).ready(function() {
+        $('#signup').submit(function(e) {
+            e.preventDefault();
+            $('.alert').hide();
+
+            //All Values
+            var phone = $('#phoneNo').val().replace(/\D/g, ''); // remove all non-digits
+            var phoneNumValid = $('#phoneNumValid').val();
+            var firstName = $('#firstName').val().trim();
+            var lastName = $('#lastName').val().trim();
+            var email = $('#email').val();
+
+            // use a regular expression to check if the email address is valid
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            var password = $('#password').val();
+            var userRegex = /^[a-zA-Z]+$/;
+
+            if (phone.length !== 10) {
+                $('.invalidPhone').show();
+                // alert('Please enter a 10-digit phone number.');
+                return false;
+            }
+            if(!(phone.startsWith('6') || phone.startsWith('7') || phone.startsWith('8') || phone.startsWith('9'))){
+                $('.invalidNum').show();
+                // alert('Please enter valid phone number.');
+                return false;
+            }
+            if(firstName.length < 3){
+                $('.invalidName').show();
+                $('#firstName').focus();
+                // alert('Please enter valid name');
+                return false;
+            } else if (lastName.length < 3){
+                $('.invalidName').show();
+                $('#lastName').focus();
+                // alert('Please enter valid name');
+                return false;
+            } else if(!userRegex.test(firstName)){
+                $('.invalidNameAlphabetic').show();
+                $('#firstName').focus();
+                return false;
+            } else if(!userRegex.test(lastName)){
+                $('.invalidNameAlphabetic').show();
+                $('#lastName').focus();
+                return false;
+            } else if (!emailRegex.test(email)) {
+                //alert('Please enter a valid email address.');
+                $('.invalidMail').show();
+                $('#email').focus();
+                return false; // stop the form from submitting if the email is invalid
+            } else if (password.length < 8) {
+                $('.invalidPass').show();
+                //alert('Password must be at least 8 characters long.');
+                return false; // stop the form from submitting if the password is too short
+            } else if(email!=''){
+                var status = false;
+                $.ajax({
+                    type:'POST',
+                    url:'/ajaxCheckUserValid',
+                    data:{'username':email},
+                    async:false
+                }).done(function(result) {
+                    console.log("result : "+result)
+                    if(result=='1'){
+                        $('.alreadyExist').show();
+                        $('#email').focus();
+                        status = false;
+                    } else {
+                        status =  true;
+                    }
+                });
+                if(status==false){
+                    return false;
+                }
+            }
+            if(phone.length==10 && phoneNumValid=='0'){
+                var status = false;
+                $.ajax({
+                    type:'POST',
+                    url:'/ajaxCheckPhoneNo',
+                    data:{'phone':phone},
+                    async:false
+                }).done(function(result) {
+                    console.log("result : "+result)
+                    if(result=='1'){
+                        $('.alreadyExistPhone').show();
+                        $('#phoneNo').focus();
+                        status = false;
+                    } else {
+                        $('#phoneNumValid').val("1");
+                    }
+                });
+                if(status == false){
+                    return false;
+                }
+            }
+            // submit form
+            $(this).unbind('submit').submit();
+
+        }); //end of form submit
+    }); // end of document Ready function
+</script>
+</body>
+</html>

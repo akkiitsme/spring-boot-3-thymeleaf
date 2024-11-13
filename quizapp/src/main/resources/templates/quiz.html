@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>QUIZ | TIME</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <style>
+        .gradient-custom {
+        /* fallback for old browsers */
+            background: #84fab0;
+
+            /* Chrome 10-25, Safari 5.1-6 */
+            background: -webkit-linear-gradient(to right, rgba(132, 250, 176, 1), rgba(143, 211, 244, 1));
+
+            /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+            background: linear-gradient(to right, rgba(132, 250, 176, 1), rgba(143, 211, 244, 1))
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <div class="row my-5 d-flex justify-content-center">
+        <div class="col-md-6 mt-5">
+            <div class="card gradient-custom">
+                <div class="card-body">
+                    <div class="container quiz-content">
+                        <div>
+                            <h5 class="card-title">QUEST-TIME</h5>
+                        </div>
+                        <p class="card-text">
+                            Try to give correct answer to score more
+                        </p>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <form id="quizForm" th:action="@{/quiz/save-answers}" method="post">
+                                    <div id="questionContainer">
+                                        <h3 id="questionText"></h3>
+                                        <div id="answers"></div>
+                                        <button class="btn btn-primary my-5" type="button" id="nextBtn">Next</button>
+                                    </div>
+                                    <input type="hidden" id="userId" name="userId" th:value="${#authentication.principal.id}" />
+                                    <input type="hidden" name="subjectId" th:value="${subjectId}" />
+                                    <input type="hidden" name="questionId" id="questionId" />
+                                    <input type="hidden" name="selectedAnswerId" id="selectedAnswerId" />
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container result-content" style="display:none">
+                        <div class="row text-center">
+                            <h3 class="text-center"> Result of Quiz</h3>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header fw-bold">Total Que Marks</div>
+                                    <div class="card-body total_question fw-bold"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header fw-bold">Total Ans Score</div>
+                                    <div class="card-body total_score fw-bold"></div>
+                                </div>
+                            </div>
+                            <div class="my-5 justify-content-center">
+                                <a class="btn btn-primary" th:href="@{/home}"> Done </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script th:inline="javascript">
+/*[[${questionList}]] will be rendered as JSON */
+var questions = /*[[${questionList}]]*/ [];
+</script>
+
+<script>
+    let currentIndex = 0;
+    let score = 0;
+    $(document).ready(function() {
+        console.log("Total Question : "+questions.length)
+
+        if (questions.length > 0) {
+            loadQuestion(currentIndex);
+        }
+        const userId = $("#userId").val();
+
+        $('#nextBtn').on('click', function() {
+            const selectedAnswer = $('input[name="answer"]:checked').val();
+            $('#selectedAnswerId').val(selectedAnswer);
+            if (selectedAnswer) {
+                const question = questions[currentIndex];
+                // Check if the selected answer is correct
+                if (parseInt(selectedAnswer) === question.correctAnswerId) {
+                    score += 2;
+                    console.log("score: "+score);
+                }
+                saveAnswer(question.questionId, selectedAnswer, userId);
+                currentIndex++;
+                if (currentIndex < questions.length) {
+                    loadQuestion(currentIndex);
+                } else {
+                    $(".quiz-content").hide();
+                    $(".result-content").show();
+                    $('.total_question').text(questions.length * 2);
+                    $('.total_score').text(score);
+                    alert("Quiz Completed!");
+                    setInterval(submitQuiz, 1000*10);
+                }
+            } else {
+                alert("Please select an answer before proceeding.");
+            }
+        });
+    });
+
+    function submitQuiz(){
+        $('#quizForm').submit();
+    }
+
+    function loadQuestion(index) {
+        const question = questions[index];
+        $('#questionText').text(question.question);
+        $('#questionId').val(question.questionId);
+        $('#answers').empty();
+
+        question.ansList.forEach(answer => {
+            $('#answers').append(`
+                    <div class="pb-1">
+                        <input type="radio" id="answer${answer.answerId}" name="answer" value="${answer.answerId}" />
+                        <label for="answer${answer.answerId}">${answer.answer}</label>
+                    </div>
+                `);
+        });
+    }
+
+    function saveAnswer(queId, ansId, userId) {
+        $.ajax({
+            url: '/api/save-question-answer',
+            type: 'POST',
+            data: { queId: queId, ansId: ansId, userId: userId },
+            success: function(response) {
+                console.log("Response from server: " + response);
+            },
+            error: function(xhr, status, error) {
+                console.error("Error saving answer:", error);
+            }
+        });
+    }
+</script>
+</body>
+</html>
