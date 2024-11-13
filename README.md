@@ -25,7 +25,7 @@ Maven 3+<br />
 MySQL 8.0<br />
 To build and run the project, follow these steps:<br />
 <hr />
-Clone the repository: git clone https://github.com/akkiitsme/spring-boot-3-jwt-security.git<br />
+Clone the repository: git clone https://github.com/akkiitsme/spring-boot-3-thymeleaf.git<br />
 Navigate to the project directory: cd quizapp<br />
 Add database "quiz_portal" to mysql - prefer attached quiz_thymeleaf.sql<br />
 Build the project: mvn clean install<br />
